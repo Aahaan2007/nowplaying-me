@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home | nowPlaying</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sansation:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/48b5189097.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+     <!-- Background animation using Vanta.js -->
+
+    <div id="background_animation"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta/dist/vanta.net.min.js"></script>
+
+    <!-- Background animation using Vanta.js -->
+
+    <script src="js/script.js"></script>
+
+    <!-- NAVIGATION BAR -->
+
+    <nav id="navbar">
+        <h2 id="main_logo">nowPlaying.me</h2>
+        <ul class="nav-links">
+            <li><a href="#home" class="nav-link active">Home</a></li>
+            <li><a href="#features" class="nav-link">Features</a></li>
+            <li><a href="#about" class="nav-link">About</a></li>
+        </ul>
+    </nav>
+
+    <!-- NAVIGATION BAR -->
+
+
+    <!-- HERO SECTION -->
+
+    <section id="home" class="section">
+        <h1 id="main_heading">spotify wrapped, but better.</h1>
+        <button id="login_button">
+            <i class="fa-brands fa-spotify" id="spotify_icon_in_button"></i>
+            <p><a href="#" id="login_button_link">LOGIN WITH SPOTIFY</a></p>
+        </button>
+    </section>
+
+    <!-- HERO SECTION -->
+
+
+    <!-- FEATURES SECTION -->
+
+    <section id="features" class="section">
+        <div class="section-container">
+            <h2 class="section-heading">Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fa-solid fa-chart-line feature-icon"></i>
+                    <h3>Real-time Analytics</h3>
+                    <p>Track your music habits as they happen, no need to wait for year-end summaries.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fa-solid fa-music feature-icon"></i>
+                    <h3>Genre Breakdown</h3>
+                    <p>Discover your listening patterns across different music genres and time periods.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fa-solid fa-share-nodes feature-icon"></i>
+                    <h3>Shareable Stats</h3>
+                    <p>Generate custom graphics to share your unique music taste with friends.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES SECTION -->
+
+
+    <!-- ABOUT SECTION -->
+
+    <section id="about" class="section">
+        <div class="section-container">
+            <h2 class="section-heading">About</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>nowPlaying.me brings you insights about your music listening habits that Spotify's yearly wrapped doesn't show you. We believe music analytics should be available year-round, not just once a year.</p>
+                    <p>Our platform connects securely with your Spotify account to provide real-time statistics and visualizations about your listening patterns.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT SECTION -->
+
+</body>
+</html>
