@@ -18,6 +18,24 @@ document.addEventListener('DOMContentLoaded', function() {
     const navLinks = document.querySelectorAll('.nav-link');
     const navbar = document.getElementById('navbar');
     
+    // Mobile menu toggle functionality
+    const hamburger = document.querySelector('.hamburger-menu');
+    const navLinksContainer = document.querySelector('.nav-links');
+    
+    // Toggle mobile menu when hamburger is clicked
+    hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        navLinksContainer.classList.toggle('active');
+    });
+    
+    // Close mobile menu when a link is clicked
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            navLinksContainer.classList.remove('active');
+        });
+    });
+    
     // Mark that JS has loaded properly, enabling animations
     document.body.classList.add('js-loaded');
     
