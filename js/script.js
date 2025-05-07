@@ -8,7 +8,8 @@ VANTA.NET({
     scale: 1.00,
     scaleMobile: 1.00,
     color: 0x1aecf4,
-    backgroundColor: 0x38
+    backgroundColor: 0x38,
+    points: 11.00
   })
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -25,6 +26,15 @@ document.addEventListener('DOMContentLoaded', function() {
             `<span style="transition-delay: ${i * 0.03}s">${char === ' ' ? '&nbsp;' : char}</span>`
         ).join('');
     }
+
+    // Apply the same effect to all section headings
+    const sectionHeadings = document.querySelectorAll('.section-heading');
+    sectionHeadings.forEach(heading => {
+        const text = heading.innerText;
+        heading.innerHTML = text.split('').map((char, i) => 
+            `<span style="transition-delay: ${i * 0.03}s">${char === ' ' ? '&nbsp;' : char}</span>`
+        ).join('');
+    });
     
     // Handle smooth scrolling for nav links
     navLinks.forEach(link => {

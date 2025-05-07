@@ -151,10 +151,20 @@ html, body{
     animation: fadeInUp 0.8s ease-out;
 }
 
+/* Section heading letter hover effect - same as main_heading */
+.section-heading span {
+    display: inline-block;
+    transition: color 0.3s ease;
+}
+
+.section-heading:hover span {
+    color: rgb(30, 215, 96);
+}
+
 .section-heading:hover{
-    color: #00e5e9;
     cursor: pointer;
     transition: 0.3s;
+    color: #fff; /* Maintain white color for any non-span text */
 }
 
 /* Features Section */
@@ -166,28 +176,95 @@ html, body{
 }
 
 .feature-card {
-    background: rgba(0, 0, 0, 0.7);
-    padding: 30px;
-    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
+    padding: 2.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
     text-align: center;
-    transition: transform 0.3s, box-shadow 0.3s;
-    animation: fadeInUp 0.8s ease-out;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Adding light outline with green-blue gradient */
+    border: 1px solid transparent;
+    background-clip: padding-box;
+    position: relative;
+}
+
+.feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+    margin: -1px;
+    border-radius: inherit;
+    background: rgba(0, 0, 0, 0.5)
 }
 
 .feature-card:hover {
     transform: translateY(-10px);
-    box-shadow: 0 10px 20px rgba(0, 229, 233, 0.2);
+}
+
+.feature-card:hover::before {
+    background: linear-gradient(135deg, rgba(30, 215, 96, 0.5), rgba(0, 229, 233, 0.5));
 }
 
 .feature-icon {
-    font-size: 2.5em;
-    margin-bottom: 20px;
-    color: rgb(30 215 96);
+    font-size: 3em;
+    margin-bottom: 35px;
+    color: rgb(30, 215, 96);
+    transition: transform 0.3s ease;
+    display: block;
+    text-align: center;
+    height: 60px; /* Fixed height for consistent spacing */
+}
+
+.feature-card:hover .feature-icon {
+    transform: scale(1.1);
 }
 
 .feature-card h3 {
-    margin-bottom: 15px;
-    font-size: 1.5em;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    font-size: 1.6em;
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    width: 100%; /* Makes the heading take full width */
+    /* Adding underline with gradient */
+    padding-bottom: 8px;
+}
+
+.feature-card h3::after {
+    content: '';
+    position: absolute;
+    width: 60px;
+    height: 2px;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(to right, rgb(30, 215, 96), #00e5e9);
+    transition: width 0.3s ease;
+}
+
+.feature-card:hover h3::after {
+    width: 80px;
+}
+
+.feature-card p {
+    font-size: 1.1em;
+    line-height: 1.6;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.feature-card:hover p {
+    opacity: 1;
 }
 
 /* About Section */
