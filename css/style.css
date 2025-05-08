@@ -51,7 +51,7 @@ html, body{
     font-weight: 700;
     font-style: normal;
   }
-  
+
   .sansation-light-italic {
     font-family: "Sansation", sans-serif;
     font-weight: 300;
@@ -389,6 +389,13 @@ html, body{
 .about-text p:nth-child(4).reveal { animation-delay: 0.7s; }
 .about-text p:nth-child(5).reveal { animation-delay: 0.9s; }
 
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Increased from 2px to 5px for more space between icon and text */
+
+}
+
 #main_logo{
     margin-left: 0;
     color: #00e5e9;
@@ -397,6 +404,16 @@ html, body{
     font-size: 2em;
     user-select: none;
     animation: fadeInUp 0.8s ease-out 0.2s forwards;
+    display: inline-block;
+}
+
+.logo_icon{
+    color: #00e5e9;
+    font-size: 1.5em;
+    margin-right: 5px;
+    animation: fadeInUp 0.8s ease-out 0.1s forwards;
+    text-shadow: 0 0 10px rgba(0, 206, 209, 0.25);
+    transform: translateY(5px); /* Moved the icon down by 2px to align with the text */
 }
 
 #main_heading{
@@ -474,7 +491,7 @@ html, body{
 /* Responsive Design */
 @media (max-width: 768px) {
     #navbar {
-        padding: 15px 20px;
+        padding: 15px 20px 15px 10px;
     }
     
     .hamburger-menu {
@@ -564,4 +581,5 @@ html, body{
         max-width: 350px;
         margin: 0 auto;
     }
+    
 }
