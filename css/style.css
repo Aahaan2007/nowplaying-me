@@ -239,7 +239,7 @@ html, body{
     opacity: 1; /* Cards are visible by default */
     transform: translateY(0);
     /* Separate transitions for animation and hover */
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    transition: opacity 2s ease-out, transform 0.6s ease-out;
 }
 
 /* Only hide cards when JS has properly loaded */
