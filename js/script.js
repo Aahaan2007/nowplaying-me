@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (mainHeading) {
         const text = mainHeading.innerText;
         mainHeading.innerHTML = text.split('').map((char, i) => 
-            `<span style="transition-delay: ${i * 0.03}s">${char === ' ' ? '&nbsp;' : char}</span>`
+            `<span style="transition-delay: ${i * 0.03}s">${char === ' ' ? '&nbsp;' : char}</span>${char === ',' && window.innerWidth < 768 ? '<br>' : ''}`
         ).join('');
     }
 
