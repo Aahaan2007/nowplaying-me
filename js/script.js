@@ -1,7 +1,7 @@
 let vantaEffect; // Declare vantaEffect in a broader scope
 
 function initializeVanta() {
-    const pointsValue = window.innerWidth < 768 ? 7.00 : 11.00;
+    const pointsValue = window.innerWidth < 768 ? 2.00 : 11.00;
     if (vantaEffect) {
         vantaEffect.destroy(); // Destroy existing instance if any
     }
