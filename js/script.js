@@ -1,16 +1,32 @@
-VANTA.NET({
-    el: "#background_animation",
-    mouseControls: true,
-    touchControls: true,
-    gyroControls: false,
-    minHeight: 200.00,
-    minWidth: 200.00,
-    scale: 1.00,
-    scaleMobile: 1.00,
-    color: 0x24ff00,
-    backgroundColor: 0x38,
-    points: 11.00
-})
+let vantaEffect; // Declare vantaEffect in a broader scope
+
+function initializeVanta() {
+    const pointsValue = window.innerWidth < 768 ? 9.00 : 11.00;
+    if (vantaEffect) {
+        vantaEffect.destroy(); // Destroy existing instance if any
+    }
+    vantaEffect = VANTA.NET({
+        el: "#background_animation",
+        mouseControls: true,
+        touchControls: true,
+        gyroControls: false,
+        minHeight: 200.00,
+        minWidth: 200.00,
+        scale: 1.00,
+        scaleMobile: 1.00,
+        color: 0x24ff00,
+        backgroundColor: 0x38,
+        points: pointsValue
+    });
+}
+
+// Initial call
+initializeVanta();
+
+// Re-initialize on window resize
+window.addEventListener('resize', () => {
+    initializeVanta();
+});
 
 document.addEventListener('DOMContentLoaded', function() {
     // Get all sections and nav links
