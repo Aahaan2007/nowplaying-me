@@ -4,7 +4,7 @@ const spotifyConfig = {
     clientSecret: '519d421dca2046b0a602259a9fc62137', // Only used server-side in production
     redirectUri: window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost' 
         ? window.location.origin + '/app.html'  // Use app.html for local development
-        : 'https://nowplaying-me.vercel.app/callback', // Use the callback endpoint for production
+        : 'https://nowplaying-me.vercel.app/callback.html', // Use the callback endpoint for production
     scopes: [
         'user-read-private',
         'user-read-email',
