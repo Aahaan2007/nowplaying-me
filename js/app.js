@@ -301,7 +301,7 @@ function displayCurrentlyPlaying(data) {
 // Fetch user's top tracks
 async function fetchTopTracks(accessToken) {
     try {
-        const response = await fetch('https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=5', {
+        const response = await fetch('https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=6', {
             headers: {
                 'Authorization': `Bearer ${accessToken}`
             }
@@ -348,7 +348,7 @@ function displayTopTracks(data) {
 // Fetch user's top artists
 async function fetchTopArtists(accessToken) {
     try {
-        const response = await fetch('https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=5', {
+        const response = await fetch('https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=6', {
             headers: {
                 'Authorization': `Bearer ${accessToken}`
             }
