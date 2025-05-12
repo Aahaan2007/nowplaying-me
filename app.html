@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>nowPlaying.me - App</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/app.css">
+    <link rel="icon" href="img/logoo.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sansation:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/48b5189097.js" crossorigin="anonymous"></script>
+</head>
+<body class="app-body">
+    <div id="background_animation"></div>
+
+    <!-- NAVIGATION BAR -->
+    <nav id="navbar" class="app-nav">
+        <div class="logo-container">
+            <i class="fa-solid fa-play logo_icon"></i>
+            <h2 id="main_logo">nowPlaying.me</h2>
+        </div>
+        <div class="user-profile">
+            <img src="" alt="Profile" id="user-profile-image" class="profile-image hidden">
+            <span id="user-display-name">Loading...</span>
+            <button id="logout-button">Logout</button>
+        </div>
+    </nav>
+
+    <!-- MAIN APP CONTENT -->
+    <main class="app-container">
+        <div class="app-loading" id="loading-indicator">
+            <i class="fa-solid fa-compact-disc fa-spin"></i>
+            <p>Loading your Spotify data...</p>
+        </div>
+
+        <div class="error-container hidden" id="error-container">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <h3>Oops! Something went wrong</h3>
+            <p id="error-message">We couldn't load your Spotify data. Please try again later.</p>
+            <button id="retry-button">Try Again</button>
+            <button id="logout-error-button">Log Out</button>
+        </div>
+
+        <div class="app-content hidden" id="app-content">
+            <section class="dashboard-section">
+                <h3 class="section-heading">Your Dashboard</h1>
+                <div class="stats-container">
+                    <div class="stat-card" id="recent-tracks">
+                        <h3>Recently Played</h3>
+                        <ul id="recent-tracks-list" class="tracks-list">
+                            <li class="placeholder">Loading your recent tracks...</li>
+                        </ul>
+                    </div>
+
+                    <div class="stat-card" id="top-tracks">
+                        <h3>Your Top Tracks</h3>
+                        <ul id="top-tracks-list" class="tracks-list">
+                            <li class="placeholder">Loading your top tracks...</li>
+                        </ul>
+                    </div>
+
+                    <div class="stat-card" id="top-artists">
+                        <h3>Your Top Artists</h3>
+                        <ul id="top-artists-list" class="artists-list">
+                            <li class="placeholder">Loading your top artists...</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="stat-card" id="currently-playing">
+                        <h3>Currently Playing</h3>
+                        <div class="track-info">
+                            <div class="album-art-container">
+                                <img src="" alt="Album Art" id="current-album-art">
+                            </div>
+                            <div class="track-details">
+                                <p class="track-name" id="current-track-name">Not playing</p>
+                                <p class="artist-name" id="current-artist-name">-</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="app-footer">
+        <p>&copy; 2025 nowPlaying.me | Not affiliated with Spotify</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta/dist/vanta.net.min.js"></script>
+    <script src="js/spotify-auth.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        VANTA.NET({
+            el: "#background_animation",
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.00,
+            scaleMobile: 1.00,
+            color: 0x24ff00,
+            backgroundColor: 0x38,
+            points: 11.00
+        })
+    </script>
+</body>
+</html>

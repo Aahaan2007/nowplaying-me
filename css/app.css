@@ -1,0 +1,268 @@
+/* App Specific Styles */
+.app-body {
+    padding-top: 70px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.app-nav {
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #fff;
+}
+
+.profile-image {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #00e5e9;
+}
+
+#logout-button {
+    background-color: transparent;
+    border: 1px solid #00e5e9;
+    color: #00e5e9;
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#logout-button:hover {
+    background-color: #00e5e9;
+    color: #000;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.app-container {
+    flex-grow: 1;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.app-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+    color: #00e5e9;
+    font-size: 1.5em;
+}
+
+.app-loading .fa-compact-disc {
+    font-size: 3em;
+    margin-bottom: 20px;
+    color: #00e5e9;
+}
+
+.error-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+    color: #ff4545;
+    font-size: 1.2em;
+    text-align: center;
+    padding: 20px;
+}
+
+.error-container .fa-circle-exclamation {
+    font-size: 3em;
+    margin-bottom: 20px;
+}
+
+.error-container h3 {
+    margin-bottom: 10px;
+    font-size: 1.5em;
+}
+
+.error-container p {
+    margin-bottom: 20px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.error-container button {
+    padding: 10px 20px;
+    margin: 5px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.error-container #retry-button {
+    background-color: #00e5e9;
+    color: #000;
+}
+
+.error-container #logout-error-button {
+    background-color: transparent;
+    border: 1px solid #ff4545;
+    color: #ff4545;
+}
+
+.error-container #retry-button:hover {
+    background-color: #00b2b6;
+}
+
+.error-container #logout-error-button:hover {
+    background-color: rgba(255, 69, 69, 0.1);
+}
+
+.app-content {
+    margin-top: 20px;
+}
+
+.dashboard-section h1 {
+    font-size: 2.5em;
+    margin-bottom: 30px;
+    text-align: center;
+    color: #fff;
+}
+
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.stat-card {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.stat-card h3 {
+    font-size: 1.4em;
+    margin-bottom: 15px;
+    color: #00e5e9;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.stat-card h3::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 2px;
+    background: linear-gradient(to right, rgb(30, 215, 96), #00e5e9);
+}
+
+.track-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.album-art-container {
+    width: 80px;
+    height: 80px;
+    overflow: hidden;
+    border-radius: 5px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.album-art-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.track-details {
+    flex: 1;
+}
+
+.track-name {
+    font-size: 1.1em;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.artist-name {
+    font-size: 0.9em;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.tracks-list, .artists-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.tracks-list li, .artists-list li {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.tracks-list li:last-child, .artists-list li:last-child {
+    border-bottom: none;
+}
+
+.track-number {
+    font-size: 0.9em;
+    color: rgba(255, 255, 255, 0.5);
+    min-width: 20px;
+    text-align: center;
+}
+
+.placeholder {
+    color: rgba(255, 255, 255, 0.5);
+    text-align: center;
+    padding: 20px 0;
+}
+
+.app-footer {
+    margin-top: auto;
+    text-align: center;
+    padding: 20px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9em;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 768px) {
+    .stats-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .user-profile {
+        font-size: 0.9em;
+    }
+    
+    .profile-image {
+        width: 28px;
+        height: 28px;
+    }
+}

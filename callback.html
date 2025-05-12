@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting...</title>
+    <script>
+        // Extract the authorization code and state from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        const state = urlParams.get('state');
+        const error = urlParams.get('error');
+        
+        // Save these parameters to localStorage so the app can access them
+        if (code) localStorage.setItem('spotify_auth_code', code);
+        if (state) localStorage.setItem('spotify_callback_state', state);
+        if (error) localStorage.setItem('spotify_auth_error', error);
+        
+        // Redirect to the actual app
+        window.location.href = '/app.html';
+    </script>
+</head>
+<body>
+    <div style="display: flex; justify-content: center; align-items: center; height: 100vh; font-family: sans-serif;">
+        <div style="text-align: center;">
+            <h2>Authenticating with Spotify...</h2>
+            <p>You will be redirected momentarily.</p>
+        </div>
+    </div>
+</body>
+</html>
