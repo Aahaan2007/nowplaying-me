@@ -223,6 +223,14 @@ async function fetchUserProfile(accessToken) {
         });
         
         if (!response.ok) {
+            // Enhanced logging for failed response
+            const errorText = await response.text();
+            console.error('Spotify API Error Details:', {
+                status: response.status,
+                statusText: response.statusText,
+                responseText: errorText,
+                url: response.url
+            });
             throw new Error(`Failed to fetch user profile: ${response.status}`);
         }
         
@@ -288,8 +296,21 @@ function displayCurrentlyPlaying(data) {
         return;
     }
     
-    trackNameElement.textContent = data.item.name;
-    artistNameElement.textContent = data.item.artists.map(artist => artist.name).join(', ');
+    // Link to track
+    if (data.item.external_urls && data.item.external_urls.spotify) {
+        trackNameElement.innerHTML = `<a href="${data.item.external_urls.spotify}" target="_blank">${data.item.name}</a>`;
+    } else {
+        trackNameElement.textContent = data.item.name;
+    }
+
+    // Link to artists
+    const artists = data.item.artists.map(artist => {
+        if (artist.external_urls && artist.external_urls.spotify) {
+            return `<a href="${artist.external_urls.spotify}" target="_blank">${artist.name}</a>`;
+        }
+        return artist.name;
+    }).join(', ');
+    artistNameElement.innerHTML = artists;
     
     if (data.item.album && data.item.album.images && data.item.album.images.length > 0) {
         albumArtElement.src = data.item.album.images[0].url;
@@ -332,12 +353,22 @@ function displayTopTracks(data) {
     data.items.forEach((track, index) => {
         const li = document.createElement('li');
         
+        const trackLink = track.external_urls && track.external_urls.spotify 
+            ? `<a href="${track.external_urls.spotify}" target="_blank">${track.name}</a>` 
+            : track.name;
+
+        const artistLinks = track.artists.map(artist => {
+            return artist.external_urls && artist.external_urls.spotify
+                ? `<a href="${artist.external_urls.spotify}" target="_blank">${artist.name}</a>`
+                : artist.name;
+        }).join(', ');
+
         li.innerHTML = `
             <span class="track-number">${index + 1}</span>
             <img src="${track.album.images[0].url}" alt="${track.album.name}" width="40" height="40">
             <div class="track-details">
-                <div class="track-name">${track.name}</div>
-                <div class="artist-name">${track.artists.map(artist => artist.name).join(', ')}</div>
+                <div class="track-name">${trackLink}</div>
+                <div class="artist-name">${artistLinks}</div>
             </div>
         `;
         
@@ -376,12 +407,17 @@ function displayTopArtists(data) {
     
     topArtistsList.innerHTML = '';
     
-    data.items.forEach((artist, index) => {        const li = document.createElement('li');
+    data.items.forEach((artist, index) => {        
+        const li = document.createElement('li');
+        const artistLink = artist.external_urls && artist.external_urls.spotify
+            ? `<a href="${artist.external_urls.spotify}" target="_blank">${artist.name}</a>`
+            : artist.name;
+
         li.innerHTML = `
             <span class="track-number">${index + 1}</span>
-            <img src="${artist.images[0].url}" alt="${artist.name}" width="40" height="40" style="border-radius: 50%;">
+            <img src="${artist.images[0] ? artist.images[0].url : 'img/logoo.png'}" alt="${artist.name}" width="40" height="40" style="border-radius: 50%;">
             <div class="track-details">
-                <div class="track-name">${artist.name}</div>
+                <div class="track-name">${artistLink}</div>
             </div>
         `;
         
@@ -444,11 +480,21 @@ function displayRecentTracks(data) {
         const track = item.track;
         const li = document.createElement('li');
         
+        const trackLink = track.external_urls && track.external_urls.spotify
+            ? `<a href="${track.external_urls.spotify}" target="_blank">${track.name}</a>`
+            : track.name;
+
+        const artistLinks = track.artists.map(artist => {
+            return artist.external_urls && artist.external_urls.spotify
+                ? `<a href="${artist.external_urls.spotify}" target="_blank">${artist.name}</a>`
+                : artist.name;
+        }).join(', ');
+
         li.innerHTML = `
-            <img src="${track.album.images[0].url}" alt="${track.album.name}" width="40" height="40">
+            <img src="${track.album.images[0] ? track.album.images[0].url : 'img/logoo.png'}" alt="${track.album.name}" width="40" height="40">
             <div class="track-details">
-                <div class="track-name">${track.name}</div>
-                <div class="artist-name">${track.artists.map(artist => artist.name).join(', ')}</div>
+                <div class="track-name">${trackLink}</div>
+                <div class="artist-name">${artistLinks}</div>
                 <div class="played-at">${formatRelativeTime(item.played_at)}</div>
             </div>
         `;

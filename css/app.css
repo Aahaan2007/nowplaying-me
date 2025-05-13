@@ -231,6 +231,18 @@
     color: rgba(255, 255, 255, 0.7);
 }
 
+.track-name a,
+.artist-name a {
+    color: inherit; /* Inherit color from parent */
+    text-decoration: none; /* Remove underline */
+}
+
+.track-name a:hover,
+.artist-name a:hover {
+    text-decoration: underline; /* Add underline on hover for discoverability */
+    color: #00e5e9; /* Optional: change color on hover to match theme */
+}
+
 .tracks-list, .artists-list {
     list-style: none;
     padding: 0;
