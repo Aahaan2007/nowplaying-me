@@ -1,0 +1,221 @@
+/* Currently Playing Widget Styles */
+
+/* Main widget container */
+.nowplaying-widget {
+    position: fixed;
+    top: 117px; /* Increased from 95px to move it down more */
+    right: 15px;
+    width: 350px;
+    background: rgba(20, 20, 20, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    z-index: 900;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.5s;
+    cursor: move;
+}
+
+.nowplaying-widget:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 36px rgba(0, 229, 233, 0.2);
+    border: 1px solid rgba(0, 229, 233, 0.3);
+}
+
+/* Animation when track changes */
+.nowplaying-widget.track-changing .nowplaying-text {
+    animation: fadeOut 0.5s, fadeIn 0.5s 0.5s;
+}
+
+.nowplaying-widget.track-changing .nowplaying-album img {
+    animation: albumSpin 1s ease;
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes albumSpin {
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.1); }
+    100% { transform: rotate(360deg) scale(1); }
+}
+
+/* Album art */
+.nowplaying-album {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    overflow: hidden;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: #121212;
+    transition: transform 0.3s ease;
+}
+
+.nowplaying-album:hover {
+    transform: scale(1.05);
+}
+
+.nowplaying-album img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Info section */
+.nowplaying-info {
+    flex-grow: 1;
+    margin-left: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.nowplaying-text {
+    margin-bottom: 5px;
+    cursor: default;
+}
+
+.nowplaying-title {
+    color: #fff;
+    font-size: 0.95em;
+    font-weight: 700;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 3px;
+}
+
+.nowplaying-title::before {
+    content: "Late night lofi ✨";
+    color: transparent;
+    background: linear-gradient(90deg, #00e5e9, #a64dff);
+    background-clip: text;
+    -webkit-background-clip: text;
+    display: none;
+}
+
+.nowplaying-artist {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.8em;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Player controls */
+.nowplaying-controls {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.control-btn {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.85em;
+    padding: 6px;
+    margin-right: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.control-btn:hover {
+    color: #00e5e9;
+    background: rgba(0, 229, 233, 0.1);
+    transform: scale(1.1);
+}
+
+.play-btn {
+    color: #fff;
+    background: rgba(0, 229, 233, 0.2);
+}
+
+.play-btn:hover {
+    background: rgba(0, 229, 233, 0.3);
+}
+
+.more-btn {
+    margin-left: auto;
+    margin-right: 0;
+}
+
+/* Button active state animation */
+.btn-active {
+    animation: btnPulse 0.2s ease;
+}
+
+@keyframes btnPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+/* Progress bar (decorative for now) */
+.progress-container {
+    width: 100%;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.1);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+    border-radius: 0 0 16px 16px;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 45%;
+    background: linear-gradient(to right, #00e5e9, #a64dff);
+    transition: width 1s linear;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+    .nowplaying-widget {
+        width: calc(100% - 30px);
+        right: 15px;
+        left: 15px;
+        top: auto;
+        bottom: 15px;
+    }
+    
+    .control-btn {
+        width: 28px;
+        height: 28px;
+        margin-right: 8px;
+    }
+    
+    .nowplaying-album {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+/* For medium displays */
+@media (min-width: 769px) and (max-width: 1200px) {
+    .nowplaying-widget {
+        width: 300px;
+    }
+}
