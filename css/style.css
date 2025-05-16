@@ -210,7 +210,7 @@ html, body{
 .section-heading:hover{
     cursor: pointer;
     transition: 0.3s;
-    color: #fff; /* Maintain white color for any non-span text */
+    color: #fff;
 }
 
 /* Features Section */
@@ -279,13 +279,13 @@ html, body{
     margin: -1px;
     border-radius: inherit;
     background: rgba(0, 0, 0, 0.5);
-    transition: background 0.3s ease; /* Fast transition for hover effect */
+    transition: background 0.3s ease;
 }
 
 /* Fast hover transition specifically for hover effect */
 .feature-card:hover {
     transform: translateY(-10px);
-    transition: transform 0.3s ease; /* Faster transition specifically for hover */
+    transition: transform 0.3s ease;
 }
 
 .feature-card:hover::before {
@@ -299,7 +299,7 @@ html, body{
     transition: transform 0.3s ease;
     display: block;
     text-align: center;
-    height: 60px; /* Fixed height for consistent spacing */
+    height: 60px;
 }
 
 .feature-card:hover .feature-icon {
@@ -313,8 +313,7 @@ html, body{
     position: relative;
     display: inline-block;
     text-align: center;
-    width: 100%; /* Makes the heading take full width */
-    /* Adding underline with gradient */
+    width: 100%;
     padding-bottom: 8px;
 }
 
@@ -584,5 +583,4 @@ html, body{
         max-width: 350px;
         margin: 0 auto;
     }
-    
 }
