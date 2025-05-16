@@ -391,12 +391,25 @@ html, body{
 .logo-container {
     display: flex;
     align-items: center;
-    gap: 5px; /* Increased from 2px to 5px for more space between icon and text */
+    gap: 7px;
 
 }
 
-#main_logo{
+#main_logo_app{
     margin-left: 0;
+    margin-top: 25px;
+    color: #00e5e9;
+    font-weight: 700;
+    text-shadow: 0 0 10px rgba(0, 206, 209, 0.25);
+    font-size: 2em;
+    user-select: none;
+    animation: fadeInUp 0.8s ease-out 0.2s forwards;
+    display: inline-block;
+}
+
+#main_logo_index{
+    margin-left: 0;
+    margin-top: 25px;
     color: #00e5e9;
     font-weight: 700;
     text-shadow: 0 0 10px rgba(0, 206, 209, 0.25);
@@ -492,11 +505,20 @@ html, body{
     #navbar {
         padding: 15px 20px 15px 10px;
     }
+
+    .logo-container{
+        margin-left: 6px;
+        gap: 3px;
+    }
+
+    .logo_icon{
+        font-size: 16px;
+    }
     
     .hamburger-menu {
         display: flex;
         position: absolute;
-        top: 25px;
+        top: 35px;
         right: 25px;
     }
     
@@ -558,8 +580,14 @@ html, body{
         margin-top: 110px;
     }
 
-    #main_logo {
-        font-size: 1.7em;
+    #main_logo_app {
+        font-size: 25px;
+        margin-top: 13px;
+    }
+
+    #main_logo_index {
+        font-size: 25px;
+        margin-top: 20px;
     }
 
     .section-heading {

@@ -348,6 +348,12 @@
 }
 
 @media (max-width: 768px) {
+    #main_logo_app{
+        font-size: 20px;
+    }
+    #main_logo_index{
+        font-size: 20px;
+    }
     .stats-container {
         grid-template-columns: 1fr;
         gap: 15px;
@@ -360,6 +366,8 @@
     
     .user-profile {
         font-size: 0.9em;
+        margin-left: 9px;
+        gap: 5px;
     }
     
     .profile-image {
