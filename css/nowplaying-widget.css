@@ -64,6 +64,12 @@
     transition: transform 0.3s ease;
 }
 
+/* Slightly larger album art for basic widget */
+.nowplaying-widget.basic .nowplaying-album {
+    width: 65px;
+    height: 65px;
+}
+
 .nowplaying-album:hover {
     transform: scale(1.05);
 }
@@ -93,10 +99,39 @@
     font-size: 0.95em;
     font-weight: 700;
     margin: 0;
+    padding-left: 0; /* Ensure no extra left padding on title */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     margin-bottom: 3px;
+    transition: transform 0.3s ease;
+}
+
+/* Text marquee animation for long titles */
+@keyframes scroll-text {
+    0% { transform: translateX(0); }
+    5% { transform: translateX(0); }  /* Hold at beginning */
+    45% { transform: translateX(calc(-100% + 140px)); } /* Scroll to end - leave some visible */
+    55% { transform: translateX(calc(-100% + 140px)); } /* Hold at end */
+    100% { transform: translateX(0); } /* Very smooth return to start - uses 45% of animation time */
+}
+
+.nowplaying-title.scrolling {
+    animation: scroll-text 15s ease-in-out infinite;
+    text-overflow: clip;
+    padding-right: 25px; /* Add space at end before restarting */
+    position: relative;
+    display: inline-block; /* Important for proper text width measurement */
+    width: auto; /* Let the text determine its width */
+    min-width: 100%; /* Ensure it fills the container */
+    margin-left: 0; /* Don't offset since we're using container padding */
+}
+
+/* Add subtle fade effect on edges */
+.nowplaying-widget.basic .nowplaying-text {
+    position: relative;
+    -webkit-mask-image: linear-gradient(to right, black 0%, black 95%, transparent 100%);
+    mask-image: linear-gradient(to right, black 0%, black 95%, transparent 100%);
 }
 
 .nowplaying-title::before {
@@ -115,6 +150,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    padding-left: 0; /* Ensure no extra padding on artist name */
 }
 
 /* Player controls */
@@ -166,6 +202,21 @@
     animation: btnPulse 0.2s ease;
 }
 
+/* Error feedback animation */
+.control-btn-error {
+    animation: btnErrorShake 0.5s ease;
+    color: #ff3e3e !important;
+    background: rgba(255, 62, 62, 0.1);
+}
+
+@keyframes btnErrorShake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(3px); }
+    50% { transform: translateX(-3px); }
+    75% { transform: translateX(3px); }
+    100% { transform: translateX(0); }
+}
+
 @keyframes btnPulse {
     0% { transform: scale(1); }
     50% { transform: scale(1.2); }
@@ -189,6 +240,47 @@
     width: 45%;
     background: linear-gradient(to right, #00e5e9, #a64dff);
     transition: width 1s linear;
+}
+
+/* Basic widget styling */
+.nowplaying-widget.basic {
+    padding-bottom: 10px;
+    width: 320px;
+    min-width: 280px;
+}
+
+.nowplaying-widget.basic .nowplaying-info {
+    flex-direction: row;
+    align-items: center;
+}
+
+.nowplaying-widget.basic .nowplaying-text {
+    flex-grow: 1;
+    margin-bottom: 0;
+    width: calc(100% - 40px); /* Ensuring it takes all available space minus the Spotify icon */
+    overflow: hidden;
+    position: relative;
+    max-width: 220px; /* Set a max width to ensure proper scrolling behavior */     
+    box-sizing: border-box; /* Make sure padding doesn't increase the width */
+}
+
+.open-in-spotify {
+    color: #1DB954; /* Spotify green */
+    font-size: 1.4em;
+    margin-left: auto;
+    margin-right: 5px;
+    padding: 6px 8px;
+    transition: all 0.2s ease;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.open-in-spotify:hover {
+    color: #fff;
+    background-color: #1DB954;
+    transform: scale(1.1);
 }
 
 /* Media queries for responsiveness */

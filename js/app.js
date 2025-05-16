@@ -317,6 +317,9 @@ function displayCurrentlyPlaying(data) {
     } else {
         albumArtElement.src = 'img/logoo.png'; // Fallback image
     }
+    
+    // Make the function accessible globally so the widget can use it
+    window.currentTrackData = data;
 }
 
 // Fetch user's top tracks

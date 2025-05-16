@@ -55,13 +55,28 @@ function initNowPlayingWidget() {
     const widget = document.getElementById('nowplaying-widget');
     if (!widget) return;
     
-    // Playback control buttons
+    // If we're on the app page, initialize with "No song playing" text
+    if (window.location.pathname.includes('app.html')) {
+        updateNowPlayingWidget('No song playing', '—', 'img/logoo.png');
+        
+        // For app.html, don't set up demo event handlers
+        // The real event handlers will be set up by setupControlButtons()
+    } else {
+        // For non-app pages like index.html, set up demo event handlers
+        setupDemoControlButtons(widget);    }
+
+    // Make the widget draggable for desktop users, regardless of page
+    makeWidgetDraggable(widget);
+}
+
+// Setup demo control buttons for non-app pages
+function setupDemoControlButtons(widget) {
     const playBtn = widget.querySelector('.play-btn');
     const prevBtn = widget.querySelector('.prev-btn');
     const nextBtn = widget.querySelector('.next-btn');
     const moreBtn = widget.querySelector('.more-btn');
     
-    // Play/pause functionality
+    // Play/pause functionality (demo only)
     if (playBtn) {
         playBtn.addEventListener('click', () => {
             const icon = playBtn.querySelector('i');
@@ -70,19 +85,9 @@ function initNowPlayingWidget() {
             if (icon.classList.contains('fa-play')) {
                 icon.classList.remove('fa-play');
                 icon.classList.add('fa-pause');
-                
-                // Attempt to control real playback if on app page and connected to Spotify
-                if (window.location.pathname.includes('app.html') && typeof controlPlayback === 'function') {
-                    controlPlayback('play');
-                }
             } else {
                 icon.classList.remove('fa-pause');
                 icon.classList.add('fa-play');
-                
-                // Attempt to control real playback if on app page and connected to Spotify
-                if (window.location.pathname.includes('app.html') && typeof controlPlayback === 'function') {
-                    controlPlayback('pause');
-                }
             }
         });
     }
@@ -90,7 +95,7 @@ function initNowPlayingWidget() {
     // Demo functionality for other buttons
     if (prevBtn) {
         prevBtn.addEventListener('click', () => {
-            console.log('Previous track');
+            console.log('Previous track (demo)');
             // Animation effect
             prevBtn.classList.add('btn-active');
             setTimeout(() => prevBtn.classList.remove('btn-active'), 200);
@@ -99,7 +104,7 @@ function initNowPlayingWidget() {
 
     if (nextBtn) {
         nextBtn.addEventListener('click', () => {
-            console.log('Next track');
+            console.log('Next track (demo)');
             // Animation effect
             nextBtn.classList.add('btn-active');
             setTimeout(() => nextBtn.classList.remove('btn-active'), 200);
@@ -108,15 +113,12 @@ function initNowPlayingWidget() {
 
     if (moreBtn) {
         moreBtn.addEventListener('click', () => {
-            console.log('More options');
+            console.log('More options (demo)');
             // Animation effect
             moreBtn.classList.add('btn-active');
             setTimeout(() => moreBtn.classList.remove('btn-active'), 200);
         });
     }
-
-    // Make the widget draggable for desktop users
-    makeWidgetDraggable(widget);
 }
 
 function makeWidgetDraggable(element) {
@@ -185,19 +187,76 @@ function updateNowPlayingWidget(title, artist, albumArt) {
     if (titleEl && title) titleEl.textContent = title;
     if (artistEl && artist) artistEl.textContent = artist;
     if (artEl && albumArt) artEl.src = albumArt;
-    
-    // Add click event to the album art to open the album in Spotify
-    if (currentSpotifyData && currentSpotifyData.item && currentSpotifyData.item.album && 
-        currentSpotifyData.item.album.external_urls && currentSpotifyData.item.album.external_urls.spotify) {
-        const albumContainer = document.querySelector('.nowplaying-album');
-        if (albumContainer) {
+      // Configure the album art click behavior
+    const albumContainer = document.querySelector('.nowplaying-album');
+    if (albumContainer) {
+        if (currentSpotifyData && currentSpotifyData.item && currentSpotifyData.item.album && 
+            currentSpotifyData.item.album.external_urls && currentSpotifyData.item.album.external_urls.spotify) {
+            // If song is playing, make album art clickable
             albumContainer.style.cursor = 'pointer';
             albumContainer.title = 'Open album in Spotify';
             albumContainer.onclick = () => {
                 window.open(currentSpotifyData.item.album.external_urls.spotify, '_blank');
             };
+        } else {
+            // If no song is playing, remove clickability
+            albumContainer.style.cursor = 'default';
+            albumContainer.title = '';
+            albumContainer.onclick = null;
         }
     }
+}
+
+// Function to show a premium required tooltip
+function showPremiumRequiredTooltip(button) {
+    // Remove any existing tooltip
+    const existingTooltip = document.querySelector('.premium-tooltip');
+    if (existingTooltip) {
+        existingTooltip.remove();
+    }
+    
+    // Create tooltip
+    const tooltip = document.createElement('div');
+    tooltip.className = 'premium-tooltip';
+    tooltip.innerHTML = '<i class="fa-solid fa-crown"></i> Spotify Premium Required';
+    
+    // Position the tooltip above the button
+    const buttonRect = button.getBoundingClientRect();
+    const tooltipHeight = 40; // Estimated height
+    
+    // Add to body
+    document.body.appendChild(tooltip);
+    
+    // Position after append so we can get actual dimensions
+    const tooltipRect = tooltip.getBoundingClientRect();
+    tooltip.style.top = (buttonRect.top - tooltipRect.height - 10) + 'px';
+    tooltip.style.left = (buttonRect.left + (buttonRect.width - tooltipRect.width) / 2) + 'px';
+    
+    // Show it
+    setTimeout(() => {
+        tooltip.classList.add('show');
+    }, 10);
+    
+    // Remove after a delay
+    setTimeout(() => {
+        tooltip.classList.remove('show');
+        setTimeout(() => {
+            tooltip.remove();
+        }, 300);
+    }, 3000);
+}
+
+// Function to show visual feedback for a button when an error occurs
+function showButtonErrorFeedback(button) {
+    if (!button) return;
+    
+    // Add error class
+    button.classList.add('control-btn-error');
+    
+    // Remove it after a short delay
+    setTimeout(() => {
+        button.classList.remove('control-btn-error');
+    }, 800);
 }
 
 // Update the progress bar based on current track position
@@ -252,54 +311,129 @@ function setupPeriodicUpdates() {
         clearInterval(updateTimer);
     }
     
+    // Do an immediate first update
+    refreshCurrentlyPlaying();
+    
     // Fetch currently playing track every 10 seconds
-    updateTimer = setInterval(async () => {
-        if (!spotifyAccessToken) {
-            // Try to get token again if it's not available
-            spotifyAccessToken = localStorage.getItem('spotify_access_token');
-            if (!spotifyAccessToken) return;
+    updateTimer = setInterval(refreshCurrentlyPlaying, 10000); // Update every 10 seconds
+}
+
+// Function to refresh the currently playing data
+async function refreshCurrentlyPlaying() {
+    if (!spotifyAccessToken) {
+        // Try to get token again if it's not available
+        spotifyAccessToken = localStorage.getItem('spotify_access_token');
+        if (!spotifyAccessToken) return;
+    }
+    
+    try {
+        // Use the same function as in app.js
+        const response = await fetch('https://api.spotify.com/v1/me/player/currently-playing', {
+            headers: {
+                'Authorization': `Bearer ${spotifyAccessToken}`
+            }
+        });
+        
+        // Handle responses
+        if (response.status === 204) {
+            // Nothing playing
+            if (window.displayCurrentlyPlaying) {
+                window.displayCurrentlyPlaying(null);
+            }
+            return;
         }
         
+        if (!response.ok) {
+            throw new Error(`Failed to fetch currently playing: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        if (window.displayCurrentlyPlaying) {
+            window.displayCurrentlyPlaying(data);
+        }
+    } catch (error) {
+        console.error('Error updating currently playing:', error);
+    }
+}
+
+// Helper function to fetch updated track info after a control action
+async function fetchUpdatedTrackInfo() {
+    try {
+        const dataResponse = await fetch('https://api.spotify.com/v1/me/player/currently-playing', {
+            headers: {
+                'Authorization': `Bearer ${spotifyAccessToken}`
+            }
+        });
+        
+        if (dataResponse.status === 204) {
+            // Nothing is playing
+            if (window.displayCurrentlyPlaying) {
+                window.displayCurrentlyPlaying(null);
+            }
+            return;
+        }
+        
+        if (dataResponse.ok) {
+            const data = await dataResponse.json();
+            if (window.displayCurrentlyPlaying) {
+                window.displayCurrentlyPlaying(data);
+            }
+        } else {
+            console.error(`Failed to fetch updated track: ${dataResponse.status}`);
+        }
+    } catch (error) {
+        console.error('Error fetching updated track:', error);
+    }
+}
+
+// Connect control buttons to Spotify API
+function setupControlButtons() {
+    // Prevent multiple handlers from being attached
+    const setupKey = 'nowplaying_controls_setup';
+    if (document.body.dataset[setupKey] === 'true') {
+        console.log('Control buttons already set up, skipping duplicate setup');
+        return;
+    }
+    
+    // Mark as set up to avoid duplicate handlers
+    document.body.dataset[setupKey] = 'true';
+    
+    // Get device ID first to ensure proper playback control
+    const getActiveDeviceId = async () => {
         try {
-            // Use the same function as in app.js
-            const response = await fetch('https://api.spotify.com/v1/me/player/currently-playing', {
+            const response = await fetch('https://api.spotify.com/v1/me/player/devices', {
                 headers: {
                     'Authorization': `Bearer ${spotifyAccessToken}`
                 }
             });
             
-            // Handle responses
-            if (response.status === 204) {
-                // Nothing playing
-                if (window.displayCurrentlyPlaying) {
-                    window.displayCurrentlyPlaying(null);
-                }
-                return;
-            }
-            
             if (!response.ok) {
-                throw new Error(`Failed to fetch currently playing: ${response.status}`);
+                console.warn('Failed to fetch devices:', response.status);
+                return null;
             }
             
             const data = await response.json();
-            if (window.displayCurrentlyPlaying) {
-                window.displayCurrentlyPlaying(data);
-            }
+            console.log('Available devices:', data);
+            
+            // Find the active device, or return the first available one
+            const activeDevice = data.devices.find(d => d.is_active) || data.devices[0];
+            return activeDevice ? activeDevice.id : null;
         } catch (error) {
-            console.error('Error updating currently playing:', error);
+            console.error('Error fetching devices:', error);
+            return null;
         }
-    }, 10000); // Update every 10 seconds
-}
-
-// Connect control buttons to Spotify API
-function setupControlButtons() {
+    };
+    
     const playBtn = document.querySelector('.play-btn');
     const prevBtn = document.querySelector('.prev-btn');
     const nextBtn = document.querySelector('.next-btn');
     
     if (playBtn) {
         playBtn.addEventListener('click', async () => {
-            if (!spotifyAccessToken) return;
+            if (!spotifyAccessToken) {
+                showButtonErrorFeedback(playBtn);
+                return;
+            }
             
             const icon = playBtn.querySelector('i');
             const isPlaying = icon.classList.contains('fa-pause');
@@ -307,7 +441,17 @@ function setupControlButtons() {
             try {
                 // Send request to Spotify API
                 const endpoint = isPlaying ? 'pause' : 'play';
-                const response = await fetch(`https://api.spotify.com/v1/me/player/${endpoint}`, {
+                
+                // Add animation to show button press
+                playBtn.classList.add('btn-active');
+                setTimeout(() => playBtn.classList.remove('btn-active'), 200);
+                
+                const deviceId = await getActiveDeviceId();
+                const url = deviceId 
+                    ? `https://api.spotify.com/v1/me/player/${endpoint}?device_id=${deviceId}`
+                    : `https://api.spotify.com/v1/me/player/${endpoint}`;
+                    
+                const response = await fetch(url, {
                     method: 'PUT',
                     headers: {
                         'Authorization': `Bearer ${spotifyAccessToken}`
@@ -338,116 +482,97 @@ function setupControlButtons() {
                             currentSpotifyData.is_playing = true;
                             startProgressTracking(currentSpotifyData);
                         }
-                    }
-                } else if (response.status === 403) {
-                    console.warn('Player command failed: Premium required for this feature');
-                    alert('This feature requires Spotify Premium');
+                    }                } else if (response.status === 403) {
+                    console.warn('Player command failed: This feature may require Spotify Premium or proper device setup');
+                    showButtonErrorFeedback(playBtn);
                 } else {
-                    throw new Error(`Failed to control playback: ${response.status}`);
+                    console.error(`Failed to control playback: ${response.status}`);
+                    showButtonErrorFeedback(playBtn);
                 }
             } catch (error) {
                 console.error('Error controlling playback:', error);
             }
         });
     }
-    
-    if (prevBtn) {
+      if (prevBtn) {
         prevBtn.addEventListener('click', async () => {
-            if (!spotifyAccessToken) return;
+            if (!spotifyAccessToken) {
+                showButtonErrorFeedback(prevBtn);
+                return;
+            }
             
             try {
-                const response = await fetch('https://api.spotify.com/v1/me/player/previous', {
+                // Add animation to show button press
+                prevBtn.classList.add('btn-active');
+                setTimeout(() => prevBtn.classList.remove('btn-active'), 200);
+                
+                const deviceId = await getActiveDeviceId();
+                const url = deviceId 
+                    ? `https://api.spotify.com/v1/me/player/previous?device_id=${deviceId}`
+                    : `https://api.spotify.com/v1/me/player/previous`;
+                    
+                const response = await fetch(url, {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${spotifyAccessToken}`
                     }
                 });
-                
-                if (response.status === 204) {
-                    // Success - animate button
-                    prevBtn.classList.add('btn-active');
-                    setTimeout(() => prevBtn.classList.remove('btn-active'), 200);
-                    
-                    // Immediately fetch updated track info
-                    setTimeout(async () => {
-                        try {
-                            const dataResponse = await fetch('https://api.spotify.com/v1/me/player/currently-playing', {
-                                headers: {
-                                    'Authorization': `Bearer ${spotifyAccessToken}`
-                                }
-                            });
-                            
-                            if (dataResponse.ok) {
-                                const data = await dataResponse.json();
-                                if (window.displayCurrentlyPlaying) {
-                                    window.displayCurrentlyPlaying(data);
-                                }
-                            }
-                        } catch (error) {
-                            console.error('Error fetching updated track:', error);
-                        }
-                    }, 500);
+                  if (response.status === 204) {
+                    // Success - button animation already handled above
+                      // Immediately fetch updated track info
+                    setTimeout(fetchUpdatedTrackInfo, 500);
                 } else if (response.status === 403) {
-                    console.warn('Player command failed: Premium required for this feature');
-                    alert('This feature requires Spotify Premium');
+                    console.warn('Player command failed: This feature may require Spotify Premium or proper device setup');
+                    showButtonErrorFeedback(prevBtn);
                 } else {
-                    throw new Error(`Failed to skip to previous: ${response.status}`);
+                    console.error(`Failed to skip to previous: ${response.status}`);
+                    showButtonErrorFeedback(prevBtn);
                 }
             } catch (error) {
                 console.error('Error skipping to previous track:', error);
             }
         });
     }
-    
-    if (nextBtn) {
+      if (nextBtn) {
         nextBtn.addEventListener('click', async () => {
-            if (!spotifyAccessToken) return;
+            if (!spotifyAccessToken) {
+                showButtonErrorFeedback(nextBtn);
+                return;
+            }
             
             try {
-                const response = await fetch('https://api.spotify.com/v1/me/player/next', {
+                // Add animation to show button press
+                nextBtn.classList.add('btn-active');
+                setTimeout(() => nextBtn.classList.remove('btn-active'), 200);
+                
+                const deviceId = await getActiveDeviceId();
+                const url = deviceId 
+                    ? `https://api.spotify.com/v1/me/player/next?device_id=${deviceId}`
+                    : `https://api.spotify.com/v1/me/player/next`;
+                    
+                const response = await fetch(url, {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${spotifyAccessToken}`
                     }
                 });
-                
-                if (response.status === 204) {
-                    // Success - animate button
-                    nextBtn.classList.add('btn-active');
-                    setTimeout(() => nextBtn.classList.remove('btn-active'), 200);
-                    
-                    // Immediately fetch updated track info
-                    setTimeout(async () => {
-                        try {
-                            const dataResponse = await fetch('https://api.spotify.com/v1/me/player/currently-playing', {
-                                headers: {
-                                    'Authorization': `Bearer ${spotifyAccessToken}`
-                                }
-                            });
-                            
-                            if (dataResponse.ok) {
-                                const data = await dataResponse.json();
-                                if (window.displayCurrentlyPlaying) {
-                                    window.displayCurrentlyPlaying(data);
-                                }
-                            }
-                        } catch (error) {
-                            console.error('Error fetching updated track:', error);
-                        }
-                    }, 500);
+                  if (response.status === 204) {
+                    // Success - button animation already handled above
+                      // Immediately fetch updated track info
+                    setTimeout(fetchUpdatedTrackInfo, 500);
                 } else if (response.status === 403) {
-                    console.warn('Player command failed: Premium required for this feature');
-                    alert('This feature requires Spotify Premium');
+                    console.warn('Player command failed: This feature may require Spotify Premium or proper device setup');
+                    showButtonErrorFeedback(nextBtn);
                 } else {
-                    throw new Error(`Failed to skip to next: ${response.status}`);
+                    console.error(`Failed to skip to next: ${response.status}`);
+                    showButtonErrorFeedback(nextBtn);
                 }
             } catch (error) {
                 console.error('Error skipping to next track:', error);
             }
         });
     }
-    
-    // Add more options button functionality
+      // Add more options button functionality
     const moreBtn = document.querySelector('.more-btn');
     if (moreBtn) {
         moreBtn.addEventListener('click', () => {
@@ -458,6 +583,9 @@ function setupControlButtons() {
             // For now, just open the current track in Spotify
             if (currentSpotifyData && currentSpotifyData.item && currentSpotifyData.item.external_urls && currentSpotifyData.item.external_urls.spotify) {
                 window.open(currentSpotifyData.item.external_urls.spotify, '_blank');
+            } else {
+                // Show error feedback if no track is available
+                showButtonErrorFeedback(moreBtn);
             }
         });
     }
@@ -486,10 +614,23 @@ if (window.location.pathname.includes('app.html')) {
                     
                     // Store the current data globally for later use
                     currentSpotifyData = data;
-                    
-                    // Now update our widget
+                      // Now update our widget
                     if (!data || !data.item) {
-                        updateNowPlayingWidget('Not playing', '-', 'img/logoo.png');
+                        updateNowPlayingWidget('No song playing', '—', 'img/logoo.png');
+                        
+                        // Reset play button to show play icon
+                        const playBtn = document.querySelector('.play-btn i');
+                        if (playBtn) {
+                            playBtn.classList.remove('fa-pause');
+                            playBtn.classList.add('fa-play');
+                        }
+                        
+                        // Reset progress bar
+                        const progressBar = document.querySelector('.progress-bar');
+                        if (progressBar) {
+                            progressBar.style.width = '0%';
+                        }
+                        
                         return;
                     }
                     
