@@ -94,7 +94,7 @@ function initNowPlayingWidget() {
 // Handle track data updates
 function handleTrackData(data) {
     if (!data || !data.item) {
-        updateNowPlayingWidget('No song playing', '—', 'img/logoo.png', null);
+        updateNowPlayingWidget('No song playing', '—', 'img/logoo.png', null, null);
         return;
     }
     
@@ -106,9 +106,20 @@ function handleTrackData(data) {
     const trackUrl = data.item.external_urls && data.item.external_urls.spotify 
         ? data.item.external_urls.spotify
         : null;
+    const trackId = data.item.id;
     
     console.log(`Updating widget with track: ${trackName} by ${artistNames}`);
-    updateNowPlayingWidget(trackName, artistNames, albumArt, trackUrl);
+    updateNowPlayingWidget(trackName, artistNames, albumArt, trackUrl, trackId);
+    
+    // Dispatch event for other components like stat cards
+    document.dispatchEvent(new CustomEvent('nowPlaying:updated', {
+        detail: {
+            trackId: trackId,
+            trackName: trackName,
+            artistNames: artistNames,
+            isPlaying: data.is_playing
+        }
+    }));
     
     // Update progress bar
     updateProgressBar(data);
@@ -120,11 +131,11 @@ function handleTrackData(data) {
 }
 
 // Helper function to update the widget with track info
-function updateNowPlayingWidget(title, artist, albumArt, spotifyUrl) {
+function updateNowPlayingWidget(title, artist, albumArt, spotifyUrl, trackId) {
     const titleEl = document.querySelector('.nowplaying-title');
     const artistEl = document.querySelector('.nowplaying-artist');
     const artEl = document.getElementById('nowplaying-art');
-    const spotifyLink = document.querySelector('.open-in-spotify');  if (titleEl && title) {
+    const spotifyLink = document.querySelector('.open-in-spotify');if (titleEl && title) {
         titleEl.textContent = title;
         
         // Check if the title needs to scroll (wait for render to get actual dimensions)
