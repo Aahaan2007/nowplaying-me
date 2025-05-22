@@ -173,7 +173,8 @@ async function initializeApp(accessToken) {
                 return { items: [] }; // Continue with empty data if this specific API fails
             })
         ]);
-          // Display the fetched data in the UI
+        
+        // Display the fetched data in the UI
         displayCurrentlyPlaying(currentlyPlaying);
         displayTopTracks(topTracks);
         displayTopArtists(topArtists);
@@ -182,16 +183,6 @@ async function initializeApp(accessToken) {
         // Hide loading indicator and show app content
         document.getElementById('loading-indicator').classList.add('hidden');
         document.getElementById('app-content').classList.remove('hidden');
-        
-        // Dispatch custom event to notify stat-cards.js that user data is loaded
-        document.dispatchEvent(new CustomEvent('userData:loaded', {
-            detail: {
-                topTracks,
-                topArtists,
-                recentTracks,
-                currentlyPlaying
-            }
-        }));
     } catch (error) {
         console.error('Error initializing app:', error);
         

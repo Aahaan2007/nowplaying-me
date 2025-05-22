@@ -347,33 +347,6 @@
     color: rgba(255, 255, 255, 0.7);
 }
 
-/* Full-width stat card styling */
-.full-width-card {
-    grid-column: 1 / -1; /* Make it span all columns */
-    min-height: 400px; /* Set a minimum height to make it fill a good portion of the viewport */
-    background: rgba(0, 0, 0, 0.6) !important; /* Slightly darker background to differentiate */
-    border: 1px solid rgba(0, 229, 233, 0.1); /* Subtle border with brand color */
-    display: flex;
-    flex-direction: column;
-}
-
-.full-width-card h3 {
-    font-size: 1.5em !important; /* Larger heading for the full-width card */
-    margin-bottom: 20px !important;
-}
-
-.insights-content {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-}
-
-.insights-content .placeholder {
-    font-size: 1.2em;
-}
-
 @media (max-width: 768px) {
     #main_logo_app{
         font-size: 20px;
