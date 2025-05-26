@@ -93,7 +93,7 @@ async function exchangeCodeForToken(code) {    try {
         // In production, you should handle this on a secure backend
 
         // For development purposes only
-        const clientSecret = '519d421dca2046b0a602259a9fc62137'; // Your Spotify client secret
+        const clientSecret = '519d421dca2046b0a602259a9fc62137';
         
         // Using the token proxy to avoid CORS issues
         const tokenEndpoint = 'https://accounts.spotify.com/api/token';
