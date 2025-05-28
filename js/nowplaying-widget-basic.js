@@ -8,6 +8,7 @@
 let currentSpotifyData = null;
 let updateTimer = null;
 let progressUpdateTimer = null;
+    let isTokenRefreshing = false; // Flag to prevent multiple refresh attempts
 
 // Add event listener for both document ready and window load to ensure everything is loaded
 document.addEventListener('DOMContentLoaded', () => {
@@ -343,9 +344,33 @@ async function refreshCurrentlyPlaying(accessToken) {
         
         if (response.status === 401) {
             console.error('Unauthorized: Access token expired or invalid');
-            // Try to redirect to login page if token is expired
-            alert('Your Spotify session has expired. Please log in again.');
-            window.location.href = '/';
+
+            // Only show alert and redirect once to prevent multiple alerts
+            if (!isTokenRefreshing) {
+                isTokenRefreshing = true;
+
+                // Try to refresh the token first before redirecting
+                const refreshToken = localStorage.getItem('spotify_refresh_token');
+                if (refreshToken && window.refreshAccessToken) {
+                    try {
+                        console.log('Attempting to refresh access token');
+                        const newTokenData = await window.refreshAccessToken(refreshToken);
+                        if (newTokenData && newTokenData.access_token) {
+                            console.log('Successfully refreshed access token');
+                            isTokenRefreshing = false;
+                            // Retry the current operation with the new token
+                            return refreshCurrentlyPlaying(newTokenData.access_token);
+                        }
+                    } catch (refreshError) {
+                        console.error('Failed to refresh token:', refreshError);
+                    }
+                }
+
+                // If we couldn't refresh, only then show alert and redirect
+                console.log('Token refresh failed, redirecting to login page');
+                alert('Your Spotify session has expired. Please log in again.');
+                window.location.href = '/';
+            }
             return;
         }
         

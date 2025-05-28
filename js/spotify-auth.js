@@ -1,10 +1,11 @@
 // Spotify API Configuration
 const spotifyConfig = {
-    clientId: 'c7f72e961b8745a4bd5b7d44d86ed3ec', // Replace with your Spotify Developer Client ID
+    clientId: 'c7f72e961b8745a4bd5b7d44d86ed3ec',
     clientSecret: '519d421dca2046b0a602259a9fc62137', // Only used server-side in production
-    redirectUri: window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost' 
-        ? window.location.origin + '/app.html'  // Use app.html for local development
-        : 'https://nowplaying-me.vercel.app/callback.html', // Use the callback endpoint for production
+    // Use exactly the redirect URIs registered in Spotify Developer Dashboard
+    redirectUri: window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost'
+        ? 'http://127.0.0.1:3000/callback.html'  // Local development with exact port
+        : 'https://nowplaying-me.vercel.app/callback.html', // Production
     scopes: [
         'user-read-private',
         'user-read-email',
@@ -86,6 +87,9 @@ async function refreshAccessToken(refreshToken) {
         throw error;
     }
 }
+
+// Make refreshAccessToken available globally
+window.refreshAccessToken = refreshAccessToken;
 
 // Get a valid access token (or refresh it if expired)
 async function getValidAccessToken() {

@@ -1,4 +1,4 @@
-/**
+    /**
  * NowPlaying Widget 
  * Handles the display and functionality of the currently playing widget
  */
