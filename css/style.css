@@ -433,7 +433,7 @@ html, body{
     text-align: center;
     font-size: 3em;
     margin-top: 170px;
-    margin-bottom: 30px;
+    margin-bottom: 19px;
     animation: fadeInUp 0.5s ease-out 0.5s forwards;
     opacity: 0;
     user-select: nonesection-heading;
@@ -452,6 +452,19 @@ html, body{
 #main_heading:hover{
     cursor: pointer;
 }
+
+#sub_heading{
+    color: #fff;
+    text-align: center;
+    font-size: 1.2em;
+    margin-top: 15px;
+    margin-bottom: 25px;
+    animation: fadeInUp 0.5s ease-out 0.6s forwards;
+    opacity: 0;
+    width: 70%;
+    font-style: italic;
+}
+
 
 #login_button i, 
 #login_button a {
@@ -578,6 +591,11 @@ html, body{
     #main_heading {
         font-size: 2.2em;
         margin-top: 110px;
+    }
+
+    #sub_heading {
+        font-size: 1.1em;
+        width: 90%;
     }
 
     #main_logo_app {
