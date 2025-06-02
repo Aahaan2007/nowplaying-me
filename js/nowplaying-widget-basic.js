@@ -8,7 +8,8 @@
 let currentSpotifyData = null;
 let updateTimer = null;
 let progressUpdateTimer = null;
-    let isTokenRefreshing = false; // Flag to prevent multiple refresh attempts
+let isTokenRefreshing = false; // Flag to prevent multiple refresh attempts
+let shareOptionsVisible = false; // Track if share options are visible
 
 // Add event listener for both document ready and window load to ensure everything is loaded
 document.addEventListener('DOMContentLoaded', () => {
@@ -39,6 +40,163 @@ function checkForExistingTrackData() {
     }
 }
 
+// Function to set up the share button and related functionality
+function setupShareButton() {
+    const shareButton = document.querySelector('.share-button');
+    if (!shareButton) return;
+    
+    // Create the share options container if it doesn't exist
+    let shareOptions = document.querySelector('.share-options');
+    if (!shareOptions) {
+        shareOptions = document.createElement('div');
+        shareOptions.className = 'share-options';
+        shareOptions.innerHTML = `            <button class="share-option" data-share-type="copy">
+                <i class="fa-regular fa-copy"></i>
+                Copy to clipboard
+            </button>
+            <button class="share-option" data-share-type="twitter">
+                <i class="fa-brands fa-twitter"></i>
+                Share to Twitter
+            </button>
+            <button class="share-option" data-share-type="instagram">
+                <i class="fa-brands fa-instagram"></i>
+                Share to Instagram
+            </button>
+        `;
+        document.querySelector('.nowplaying-widget').appendChild(shareOptions);
+    }
+    
+    // Toggle share options visibility when clicking the share button
+    shareButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Add animation effect
+        shareButton.classList.add('btn-active');
+        setTimeout(() => shareButton.classList.remove('btn-active'), 200);
+        
+        shareOptionsVisible = !shareOptionsVisible;
+        if (shareOptionsVisible) {
+            shareOptions.classList.add('active');
+        } else {
+            shareOptions.classList.remove('active');
+        }
+    });
+    
+    // Handle share option clicks
+    const shareOptionButtons = document.querySelectorAll('.share-option');
+    shareOptionButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const shareType = button.getAttribute('data-share-type');
+            shareTrack(shareType);
+            
+            // Hide options after selection
+            shareOptions.classList.remove('active');
+            shareOptionsVisible = false;
+        });
+    });
+    
+    // Close share options when clicking outside
+    document.addEventListener('click', (e) => {
+        if (shareOptionsVisible && !e.target.closest('.share-options') && !e.target.closest('.share-button')) {
+            shareOptions.classList.remove('active');
+            shareOptionsVisible = false;
+        }
+    });
+}
+
+// Function to share the currently playing track
+function shareTrack(shareType) {
+    if (!currentSpotifyData || !currentSpotifyData.item) {
+        showShareError("No track currently playing to share");
+        return;
+    }
+    
+    const trackName = currentSpotifyData.item.name;
+    const artistName = currentSpotifyData.item.artists.map(artist => artist.name).join(', ');
+    const trackUrl = currentSpotifyData.item.external_urls?.spotify || '';
+    
+    const shareText = `🎵 Now playing: ${trackName} by ${artistName} #nowPlayingMe`;
+    
+    switch (shareType) {
+        case 'copy':
+            copyToClipboard(`${shareText} ${trackUrl}`);
+            break;        case 'twitter':
+            const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(trackUrl)}`;
+            window.open(twitterUrl, '_blank');
+            break;
+        case 'instagram':
+            // For Instagram, we'll copy the text to clipboard and direct users to Instagram
+            copyToClipboard(`${shareText} ${trackUrl}`);
+            showShareSuccess("Copied to clipboard! Open Instagram to paste");
+            
+            // On mobile, we can try to open Instagram app
+            if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+                setTimeout(() => {
+                    window.open('instagram://camera', '_blank');
+                }, 1000);
+            }
+            break;
+        default:
+            console.error('Unknown share type:', shareType);
+    }
+}
+
+// Helper function to copy text to clipboard
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text)
+        .then(() => {
+            showShareSuccess("Copied to clipboard!");
+        })
+        .catch(err => {
+            console.error('Failed to copy text: ', err);
+            showShareError("Failed to copy to clipboard");
+        });
+}
+
+// Show success message after sharing
+function showShareSuccess(message) {
+    const widget = document.querySelector('.nowplaying-widget');
+    let notification = document.querySelector('.share-notification');
+    
+    if (!notification) {
+        notification = document.createElement('div');
+        notification.className = 'share-notification';
+        widget.appendChild(notification);
+    }
+    
+    notification.innerHTML = `<i class="fa-solid fa-check"></i> ${message}`;
+    notification.style.backgroundColor = 'rgba(0, 229, 233, 0.9)';
+    notification.classList.add('active');
+    
+    setTimeout(() => {
+        notification.classList.remove('active');
+    }, 2000);
+}
+
+// Show error message if sharing fails
+function showShareError(message) {
+    const widget = document.querySelector('.nowplaying-widget');
+    let notification = document.querySelector('.share-notification');
+    
+    if (!notification) {
+        notification = document.createElement('div');
+        notification.className = 'share-notification';
+        widget.appendChild(notification);
+    }
+    
+    notification.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> ${message}`;
+    notification.style.backgroundColor = 'rgba(255, 62, 62, 0.9)';
+    notification.classList.add('active');
+    
+    setTimeout(() => {
+        notification.classList.remove('active');
+    }, 2000);
+}
+
 // Initialize the widget
 function initNowPlayingWidget() {
     const widget = document.getElementById('nowplaying-widget');
@@ -54,7 +212,11 @@ function initNowPlayingWidget() {
     
     // Make the widget draggable for desktop users
     makeWidgetDraggable(widget);
-      // Check if we're on the app page, and if so, connect to Spotify data
+    
+    // Setup the share button functionality
+    setupShareButton();
+
+    // Check if we're on the app page, and if so, connect to Spotify data
     if (window.location.pathname.includes('app.html')) {
         console.log('We are on the app page, setting up data connection');
         
@@ -96,8 +258,12 @@ function initNowPlayingWidget() {
 function handleTrackData(data) {
     if (!data || !data.item) {
         updateNowPlayingWidget('No song playing', '—', 'img/logoo.png', null);
+        currentSpotifyData = null;
         return;
     }
+    
+    // Store the current data globally for sharing and later use
+    currentSpotifyData = data;
     
     const trackName = data.item.name;
     const artistNames = data.item.artists.map(artist => artist.name).join(' · ');
@@ -377,8 +543,7 @@ async function refreshCurrentlyPlaying(accessToken) {
         if (!response.ok) {
             throw new Error(`Failed to fetch currently playing: ${response.status}`);
         }
-        
-        const data = await response.json();
+          const data = await response.json();
         console.log('Successfully fetched currently playing track:', data.item?.name);
         
         // Store the current data globally for later use

@@ -42,11 +42,13 @@
             <p id="error-message">We couldn't load your Spotify data. Please try again later.</p>
             <button id="retry-button">Try Again</button>
             <button id="logout-error-button">Log Out</button>
-        </div>
-
-        <div class="app-content hidden" id="app-content">
-            <section class="dashboard-section">
-                <h3 class="app-heading">Your Dashboard</h3>
+        </div>        <div class="app-content hidden" id="app-content">            <section class="dashboard-section">
+                <div class="dashboard-header">
+                    <h3 class="app-heading">Your Dashboard</h3>
+                </div>
+                <button class="stats-share-button" title="Share your stats">
+                    <i class="fa-solid fa-share-nodes"></i> Share Stats
+                </button>
                 <div class="stats-container">
                     <div class="stat-card" id="recent-tracks">
                         <h3>Recently Played</h3>
@@ -88,10 +90,12 @@
                             <div class="nowplaying-text">
                                 <p class="nowplaying-title">No song playing</p>
                                 <p class="nowplaying-artist">—</p>
-                            </div>
-                            <a href="#" class="open-in-spotify" title="Open in Spotify">
+                            </div>                            <a href="#" class="open-in-spotify" title="Open in Spotify">
                                 <i class="fa-brands fa-spotify"></i>
                             </a>
+                            <button class="share-button" title="Share this track">
+                                <i class="fa-solid fa-share-nodes"></i>
+                            </button>
                         </div>
                         <div class="progress-container">
                             <div class="progress-bar"></div>
@@ -104,13 +108,13 @@
 
     <footer class="app-footer">
         <p>&copy; 2025 nowPlaying.me | Not affiliated with Spotify</p>
-    </footer>    <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>    
+    </footer>    <!-- Scripts -->    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>    
     <script src="https://cdn.jsdelivr.net/npm/vanta/dist/vanta.net.min.js"></script>    
     <script src="js/spotify-auth.js"></script>
     <script src="js/text-scroll-utils.js"></script>
     <script src="js/app.js"></script>
     <script src="js/nowplaying-widget-basic.js"></script>
+    <script src="js/stats-share.js"></script>
     <script>
         VANTA.NET({
             el: "#background_animation",
