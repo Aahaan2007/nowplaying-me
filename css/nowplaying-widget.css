@@ -97,12 +97,11 @@
     color: #fff;
     font-size: 0.95em;
     font-weight: 700;
-    margin: 0;
     padding-left: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin-bottom: 3px;
+    margin: 0 0 3px;
     transition: transform 0.3s ease;
 }
 
