@@ -95,31 +95,51 @@ function closeShareModal() {
 function shareStats(method) {
     // Get user's display name
     const username = document.getElementById('user-display-name').textContent;
-    
-    // Get top tracks data
+      // Get top tracks data
     const topTracks = [];
     document.querySelectorAll('#top-tracks-list li:not(.placeholder)').forEach((item, index) => {
         if (index < 3) { // Only include top 3
-            const trackName = item.querySelector('.track-name')?.textContent;
-            const artistName = item.querySelector('.artist-name')?.textContent;
-            if (trackName && artistName) {
-                topTracks.push(`${trackName} by ${artistName}`);
+            const trackNameDiv = item.querySelector('.track-name');
+            const artistNameDiv = item.querySelector('.artist-name');
+            
+            if (trackNameDiv && artistNameDiv) {
+                // Extract clean text from track name (handling links)
+                const trackLink = trackNameDiv.querySelector('a');
+                const trackName = trackLink ? trackLink.textContent : trackNameDiv.textContent;
+                
+                // Extract clean text from artist name (handling multiple artists with links)
+                const artistLinks = artistNameDiv.querySelectorAll('a');
+                let artistName;
+                if (artistLinks.length > 0) {
+                    // If there are links, get text from all of them
+                    artistName = Array.from(artistLinks).map(link => link.textContent).join(', ');
+                } else {
+                    artistName = artistNameDiv.textContent;
+                }
+                
+                if (trackName && artistName && trackName.trim() && artistName.trim()) {
+                    topTracks.push(`${trackName.trim()} by ${artistName.trim()}`);
+                }
             }
         }
     });
-    
-    // Get top artists data
+      // Get top artists data
     const topArtists = [];
     document.querySelectorAll('#top-artists-list li:not(.placeholder)').forEach((item, index) => {
         if (index < 3) { // Only include top 3
-            const artistName = item.textContent;
-            if (artistName) {
-                topArtists.push(artistName);
+            // Get artist name from the track-name div, extracting just the text content
+            const trackNameDiv = item.querySelector('.track-name');
+            if (trackNameDiv) {
+                // If there's a link, get the link text, otherwise get the div text
+                const artistLink = trackNameDiv.querySelector('a');
+                const artistName = artistLink ? artistLink.textContent : trackNameDiv.textContent;
+                if (artistName && artistName.trim()) {
+                    topArtists.push(artistName.trim());
+                }
             }
         }
     });
-    
-    // Create share text
+      // Create share text
     let shareText = `🎵 ${username}'s Music Taste on nowPlaying.me:\n\n`;
     
     if (topTracks.length > 0) {
@@ -135,9 +155,10 @@ function shareStats(method) {
         topArtists.forEach((artist, index) => {
             shareText += `${index + 1}. ${artist}\n`;
         });
+        shareText += '\n';
     }
     
-    shareText += '\nCheck out your own stats at nowplaying.me!';
+    shareText += 'Check out your own stats at nowplaying.me!';
     
     switch (method) {
         case 'copy':
