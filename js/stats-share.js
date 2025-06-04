@@ -34,11 +34,11 @@ function createShareModal() {
             <div class="stats-share-options">
                 <button class="stats-share-option copy">
                     <i class="fa-regular fa-copy"></i>
-                    Copy Stats Summary to Clipboard
+                    Copy to Clipboard
                 </button>
                 <button class="stats-share-option twitter">
                     <i class="fa-brands fa-twitter"></i>
-                    Share Stats to Twitter
+                    Share on Twitter
                 </button>
             </div>
         </div>

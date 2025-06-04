@@ -87,12 +87,6 @@
     flex-direction: column;
     justify-content: center;
 }
-
-.nowplaying-text {
-    margin-bottom: 5px;
-    cursor: default;
-}
-
 .nowplaying-title {
     color: #fff;
     font-size: 0.95em;
@@ -101,28 +95,9 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin: 0 0 3px;
+    margin-bottom: 3px;
+    margin-right: 3px;
     transition: transform 0.3s ease;
-}
-
-/* Text marquee animation for long titles */
-@keyframes scroll-text {
-    0% { transform: translateX(0); }
-    5% { transform: translateX(0); }  /* Hold at beginning */
-    45% { transform: translateX(calc(-100% + 140px)); } /* Scroll to end - leave some visible */
-    55% { transform: translateX(calc(-100% + 140px)); } /* Hold at end */
-    100% { transform: translateX(0); } /* Very smooth return to start - uses 45% of animation time */
-}
-
-.nowplaying-title.scrolling {
-    animation: scroll-text 15s ease-in-out infinite;
-    text-overflow: clip;
-    padding-right: 25px; /* Add space at end before restarting */
-    position: relative;
-    display: inline-block; /* Important for proper text width measurement */
-    width: auto; /* Let the text determine its width */
-    min-width: 100%; /* Ensure it fills the container */
-    margin-left: 0; /* Don't offset since we're using container padding */
 }
 
 /* Add subtle fade effect on edges */
@@ -200,21 +175,6 @@
     animation: btnPulse 0.2s ease;
 }
 
-/* Error feedback animation */
-.control-btn-error {
-    animation: btnErrorShake 0.5s ease;
-    color: #ff3e3e !important;
-    background: rgba(255, 62, 62, 0.1);
-}
-
-@keyframes btnErrorShake {
-    0% { transform: translateX(0); }
-    25% { transform: translateX(3px); }
-    50% { transform: translateX(-3px); }
-    75% { transform: translateX(3px); }
-    100% { transform: translateX(0); }
-}
-
 @keyframes btnPulse {
     0% { transform: scale(1); }
     50% { transform: scale(1.2); }
@@ -254,12 +214,15 @@
 
 .nowplaying-widget.basic .nowplaying-text {
     flex-grow: 1;
-    margin-bottom: 0;
-    width: calc(100% - 40px);
+    margin-bottom: 15px;
+    width: 100px;
     overflow: hidden;
     position: relative;
     max-width: 220px;     
     box-sizing: border-box;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; 
 }
 
 .open-in-spotify {
