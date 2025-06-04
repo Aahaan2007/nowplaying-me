@@ -291,27 +291,11 @@ function updateNowPlayingWidget(title, artist, albumArt, spotifyUrl) {
     const titleEl = document.querySelector('.nowplaying-title');
     const artistEl = document.querySelector('.nowplaying-artist');
     const artEl = document.getElementById('nowplaying-art');
-    const spotifyLink = document.querySelector('.open-in-spotify');  if (titleEl && title) {
+    const spotifyLink = document.querySelector('.open-in-spotify');
+    if (titleEl && title) {
         titleEl.textContent = title;
-        
-        // Check if the title needs to scroll (wait for render to get actual dimensions)
-        setTimeout(() => {
-            // Use our utility function to check and apply scrolling if needed
-            if (window.textScrollUtils && typeof window.textScrollUtils.checkAndApply === 'function') {
-                window.textScrollUtils.checkAndApply(titleEl, titleEl.parentElement, 20);
-            } else {
-                console.warn('Text scroll utilities not available, falling back to basic check');
-                // Basic fallback if the utility isn't loaded
-                const textWidth = titleEl.scrollWidth;
-                const containerWidth = titleEl.parentElement.clientWidth - 15;
-                
-                if (textWidth > containerWidth + 25) {
-                    titleEl.classList.add('scrolling');
-                }
-            }
-        }, 250); // Longer timeout to ensure the text has completely rendered
     }
-    
+
     if (artistEl && artist) artistEl.textContent = artist;
     if (artEl && albumArt) artEl.src = albumArt;
     
