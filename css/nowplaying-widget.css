@@ -486,9 +486,18 @@
         display: none !important;
     }
     
+    /* Position notification above widget on mobile */
     .share-notification {
+        bottom: auto;
+        top: -60px;
         width: 80%;
         text-align: center;
+    }
+    
+    .share-notification.active {
+        bottom: auto;
+        top: -50px;
+        opacity: 1;
     }
     
     .nowplaying-album {
