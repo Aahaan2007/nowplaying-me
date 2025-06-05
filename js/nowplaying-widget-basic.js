@@ -367,8 +367,7 @@ function updateNowPlayingWidget(title, artist, albumArt, spotifyUrl) {
 
     if (artistEl && artist) artistEl.textContent = artist;
     if (artEl && albumArt) artEl.src = albumArt;
-    
-    // Update the Spotify link
+      // Update the Spotify link
     if (spotifyLink) {
         if (spotifyUrl) {
             spotifyLink.href = spotifyUrl;
@@ -378,6 +377,22 @@ function updateNowPlayingWidget(title, artist, albumArt, spotifyUrl) {
             spotifyLink.href = '#';
             spotifyLink.style.opacity = '0.5';
             spotifyLink.style.pointerEvents = 'none';
+        }
+    }
+    
+    // Update the share button state
+    const shareButton = document.querySelector('.share-button');
+    if (shareButton) {
+        if (spotifyUrl) {
+            // If song is playing, make share button clickable
+            shareButton.style.opacity = '1';
+            shareButton.style.pointerEvents = 'auto';
+            shareButton.style.cursor = 'pointer';
+        } else {
+            // If no song is playing, disable share button
+            shareButton.style.opacity = '0.5';
+            shareButton.style.pointerEvents = 'none';
+            shareButton.style.cursor = 'default';
         }
     }
     
