@@ -22,6 +22,21 @@ window.addEventListener('load', () => {
     checkForExistingTrackData();
 });
 
+// Handle window resize to close modals/dropdowns when switching between mobile and desktop
+window.addEventListener('resize', () => {    // Close share modal if open
+    const modal = document.querySelector('.track-share-modal');
+    if (modal && modal.classList.contains('active')) {
+        closeTrackShareModal();
+    }
+    
+    // Close share dropdown if open
+    const shareOptions = document.querySelector('.share-options');
+    if (shareOptions && shareOptionsVisible) {
+        shareOptions.classList.remove('active');
+        shareOptionsVisible = false;
+    }
+});
+
 // Check if there's already track data available from app.js
 function checkForExistingTrackData() {
     console.log('Checking for existing track data');
@@ -44,23 +59,20 @@ function checkForExistingTrackData() {
 function setupShareButton() {
     const shareButton = document.querySelector('.share-button');
     if (!shareButton) return;
-    
-    // Create the share options container if it doesn't exist
+      // Create the share modal for mobile devices
+    createTrackShareModal();
+
+    // Create the share options container for desktop if it doesn't exist
     let shareOptions = document.querySelector('.share-options');
     if (!shareOptions) {
         shareOptions = document.createElement('div');
-        shareOptions.className = 'share-options';
-        shareOptions.innerHTML = `            <button class="share-option" data-share-type="copy">
+        shareOptions.className = 'share-options';        shareOptions.innerHTML = `            <button class="share-option" data-share-type="copy">
                 <i class="fa-regular fa-copy"></i>
                 Copy to clipboard
             </button>
             <button class="share-option" data-share-type="twitter">
                 <i class="fa-brands fa-twitter"></i>
                 Share to Twitter
-            </button>
-            <button class="share-option" data-share-type="instagram">
-                <i class="fa-brands fa-instagram"></i>
-                Share to Instagram
             </button>
         `;
         document.querySelector('.nowplaying-widget').appendChild(shareOptions);
@@ -74,16 +86,22 @@ function setupShareButton() {
         // Add animation effect
         shareButton.classList.add('btn-active');
         setTimeout(() => shareButton.classList.remove('btn-active'), 200);
-        
-        shareOptionsVisible = !shareOptionsVisible;
-        if (shareOptionsVisible) {
-            shareOptions.classList.add('active');
+          // Check if we're on mobile
+        if (window.innerWidth <= 768) {
+            // Open modal on mobile
+            openTrackShareModal();
         } else {
-            shareOptions.classList.remove('active');
+            // Use dropdown on desktop
+            shareOptionsVisible = !shareOptionsVisible;
+            if (shareOptionsVisible) {
+                shareOptions.classList.add('active');
+            } else {
+                shareOptions.classList.remove('active');
+            }
         }
     });
     
-    // Handle share option clicks
+    // Handle share option clicks for desktop dropdown
     const shareOptionButtons = document.querySelectorAll('.share-option');
     shareOptionButtons.forEach(button => {
         button.addEventListener('click', (e) => {
@@ -99,13 +117,77 @@ function setupShareButton() {
         });
     });
     
-    // Close share options when clicking outside
+    // Close share options when clicking outside (desktop only)
     document.addEventListener('click', (e) => {
         if (shareOptionsVisible && !e.target.closest('.share-options') && !e.target.closest('.share-button')) {
             shareOptions.classList.remove('active');
             shareOptionsVisible = false;
         }
     });
+}
+
+// Create the share modal for mobile devices
+function createTrackShareModal() {
+    // Check if modal already exists
+    if (document.querySelector('.track-share-modal')) return;
+      const modal = document.createElement('div');
+    modal.className = 'track-share-modal';
+    modal.innerHTML = `
+        <div class="share-modal-content">
+            <div class="share-modal-header">
+                <h3>Share Current Track</h3>
+                <button class="close-track-share-modal" aria-label="Close modal">&times;</button>
+            </div>            <div class="share-modal-options">
+                <button class="share-modal-option copy" data-share-type="copy">
+                    <i class="fa-regular fa-copy"></i>
+                    Copy to Clipboard
+                </button>
+                <button class="share-modal-option twitter" data-share-type="twitter">
+                    <i class="fa-brands fa-twitter"></i>
+                    Share on Twitter
+                </button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+      // Set up event listeners for the modal
+    const closeBtn = modal.querySelector('.close-track-share-modal');
+    closeBtn.addEventListener('click', closeTrackShareModal);
+      // Close modal when clicking outside
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeTrackShareModal();
+        }
+    });
+    
+    // Set up share options for modal
+    const modalOptions = modal.querySelectorAll('.share-modal-option');
+    modalOptions.forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.preventDefault();            const shareType = button.getAttribute('data-share-type');
+            shareTrack(shareType);
+            closeTrackShareModal();
+        });
+    });
+}
+
+// Open the track share modal
+function openTrackShareModal() {
+    const modal = document.querySelector('.track-share-modal');
+    if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Prevent scrolling
+    }
+}
+
+// Close the track share modal
+function closeTrackShareModal() {
+    const modal = document.querySelector('.track-share-modal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = ''; // Restore scrolling
+    }
 }
 
 // Function to share the currently playing track
@@ -119,26 +201,13 @@ function shareTrack(shareType) {
     const artistName = currentSpotifyData.item.artists.map(artist => artist.name).join(', ');
     const trackUrl = currentSpotifyData.item.external_urls?.spotify || '';
     
-    const shareText = `🎵 Now playing: ${trackName} by ${artistName} #nowPlayingMe`;
-    
-    switch (shareType) {
+    const shareText = `🎵 Now playing: ${trackName} by ${artistName} #nowPlayingMe`;    switch (shareType) {
         case 'copy':
             copyToClipboard(`${shareText} ${trackUrl}`);
-            break;        case 'twitter':
+            break;        
+        case 'twitter':
             const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(trackUrl)}`;
             window.open(twitterUrl, '_blank');
-            break;
-        case 'instagram':
-            // For Instagram, we'll copy the text to clipboard and direct users to Instagram
-            copyToClipboard(`${shareText} ${trackUrl}`);
-            showShareSuccess("Copied to clipboard! Open Instagram to paste");
-            
-            // On mobile, we can try to open Instagram app
-            if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-                setTimeout(() => {
-                    window.open('instagram://camera', '_blank');
-                }, 1000);
-            }
             break;
         default:
             console.error('Unknown share type:', shareType);

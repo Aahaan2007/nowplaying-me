@@ -34,6 +34,22 @@
     animation: albumSpin 1s ease;
 }
 
+@keyframes fadeInUp {
+    from { 
+        opacity: 0; 
+        transform: translateY(20px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
 @keyframes fadeOut {
     from { opacity: 1; }
     to { opacity: 0; }
@@ -336,15 +352,118 @@
     margin-right: 5px;
 }
 
+/* Share Modal for mobile devices */
+.track-share-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+}
+
+.track-share-modal.active {
+    display: flex;
+    animation: fadeIn 0.3s ease;
+}
+
+.share-modal-content {
+    background-color: rgba(30, 30, 30, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    width: 90%;
+    max-width: 400px;
+    padding: 20px;
+    position: relative;
+    backdrop-filter: blur(10px);
+}
+
+.share-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 15px;
+}
+
+.share-modal-header h3 {
+    color: #00e5e9;
+    margin: 0;
+    font-size: 1.2em;
+}
+
+.close-track-share-modal {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.5em;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-track-share-modal:hover {
+    color: #00e5e9;
+}
+
+.share-modal-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.share-modal-option {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    color: white;
+    text-align: left;
+    font-size: 0.95em;
+}
+
+.share-modal-option:hover {
+    background-color: rgba(0, 229, 233, 0.1);
+    transform: translateY(-2px);
+}
+
+.share-modal-option i {
+    margin-right: 12px;
+    font-size: 1.2em;
+    width: 24px;
+    text-align: center;
+}
+
+.share-modal-option.copy i {
+    color: #00e5e9;
+}
+
+.share-modal-option.twitter i {
+    color: #1DA1F2;
+}
+
 /* Media queries for responsiveness */
 @media (max-width: 768px) {
     .nowplaying-widget {
-        right: 15px;
-        left: 15px;
+        left: 6px;
         top: auto;
         bottom: 15px;
     }
-
     
     .nowplaying-widget.basic {
         width: 90%;
@@ -362,10 +481,9 @@
         padding: 4px 6px;
     }
     
+    /* Hide the dropdown share options on mobile */
     .share-options {
-        width: calc(100% - 20px);
-        right: 10px;
-        left: 10px;
+        display: none !important;
     }
     
     .share-notification {
